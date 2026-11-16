@@ -1,7 +1,8 @@
 
-// ================================
+// ========================================
 // 1. DATABASE GIẢ LẬP
-// ================================
+// ========================================
+
 const users = [
     {
         id: 1,
@@ -17,15 +18,18 @@ const users = [
     }
 ];
 
-// ================================
-// 2. HÀM GIẢ LẬP API LOGIN
-// ================================
+
+// ========================================
+// 2. GIẢ LẬP API LOGIN
+// ========================================
+
 function login(username, password) {
+
     return new Promise((resolve, reject) => {
 
         console.log("Đang gửi yêu cầu đăng nhập...");
 
-        // Giả lập thời gian phản hồi của server (1 giây)
+        // Giả lập server xử lý trong 1 giây
         setTimeout(() => {
 
             // Kiểm tra dữ liệu đầu vào
@@ -37,7 +41,7 @@ function login(username, password) {
                 return;
             }
 
-            // Tìm tài khoản trong database giả lập
+            // Tìm người dùng
             const user = users.find(
                 u => u.username === username
             );
@@ -45,8 +49,8 @@ function login(username, password) {
             // Kiểm tra tài khoản
             if (!user) {
                 reject({
-                    status: 404,
-                    message: "Tài khoản không tồn tại!"
+                    status: 401,
+                    message: "Tài khoản hoặc mật khẩu không chính xác!"
                 });
                 return;
             }
@@ -55,12 +59,15 @@ function login(username, password) {
             if (user.password !== password) {
                 reject({
                     status: 401,
-                    message: "Mật khẩu không chính xác!"
+                    message: "Tài khoản hoặc mật khẩu không chính xác!"
                 });
                 return;
             }
 
-            // Đăng nhập thành công
+            // Tạo token giả lập
+            const token = "fake-jwt-token-" + Date.now();
+
+            // Trả về kết quả thành công
             resolve({
                 status: 200,
                 message: "Đăng nhập thành công!",
@@ -69,36 +76,56 @@ function login(username, password) {
                     username: user.username,
                     role: user.role
                 },
-                token: "fake-jwt-token-" + Date.now()
+                token: token
             });
 
         }, 1000);
     });
 }
 
-// ================================
+
+// ========================================
 // 3. HÀM XỬ LÝ ĐĂNG NHẬP
-// ================================
-async function handleLogin() {
-    const username = "nam";
-    const password = "nam123";
+// ========================================
+
+async function handleLogin(username, password) {
 
     try {
+
+        // Gọi API đăng nhập và chờ kết quả
         const response = await login(username, password);
 
-        console.log(response.message);
-        console.log("User:", response.data);
-        console.log("Token:", response.token);
+        console.log("Đăng nhập thành công!");
+        console.log("Thông tin người dùng:", response.data);
+        console.log("Access Token:", response.token);
 
-        // Giả lập lưu token
+        // Lưu token
         localStorage.setItem("accessToken", response.token);
 
+        // Lưu thông tin người dùng
+        localStorage.setItem(
+            "user",
+            JSON.stringify(response.data)
+        );
+
+        console.log("Đã lưu thông tin đăng nhập!");
+
+        return response;
+
     } catch (error) {
-        console.error("Đăng nhập thất bại:", error.message);
+
+        console.error("Đăng nhập thất bại!");
+        console.error("Status:", error.status);
+        console.error("Message:", error.message);
+
+        return null;
     }
 }
 
-// ================================
+
+// ========================================
 // 4. THỰC THI
-// ================================
-handleLogin();
+// ========================================
+
+// Giả lập người dùng nhập thông tin
+handleLogin("nam", "nam123");

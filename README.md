@@ -1,0 +1,3 @@
+# Login Simulation
+
+Dự án mô phỏng chức năng đăng nhập (Login) bằng JavaScript thuần (Vanilla JavaScript), sử dụng Promise và Async/Await để giả lập quá trình gửi yêu cầu xác thực đến máy chủ. Hệ thống xây dựng dữ liệu người dùng mẫu, kiểm tra username và password, xử lý các trường hợp đăng nhập thành công hoặc thất bại thông qua resolve() và reject(). Ngoài ra, chương trình mô phỏng thời gian phản hồi của server bằng setTimeout(), trả về thông tin người dùng và token giả lập khi đăng nhập thành công, đồng thời sử dụng localStorage để lưu token. Dự án phục vụ mục đích học tập, giúp tìm hiểu quy trình xác thực người dùng và cách xử lý bất đồng bộ trong JavaScript.
